@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     isUntitled = true;
+    lineCount = 0;
+    //连接文本编辑器的变化状态信号和更新行数的槽函数
+    connect(ui->textEdit,SIGNAL(textChanged()),this,SLOT(freshLineCount()));
 }
 
 MainWindow::~MainWindow()
@@ -48,15 +51,17 @@ void MainWindow::loadFile(QString filename)
 
         //为了显示行数把int转为char * 再转为string
 
+        lineCount = ui->textEdit->document()->blockCount();
+
         char s[8];
 
         sprintf(s,"%d",lineCount);
 
         QString lineC = s;
 
-        this->ui->statusBar->showMessage("文件读取完毕，共"+lineC+"行");
+        this->ui->statusBar->showMessage("文件读取完毕，共"+lineC+"行",2000);
 
-        this->ui->LineCountLabel->setText("总行数："+lineC);
+
     }
     else
     {
@@ -204,4 +209,17 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::on_actionExit_triggered()
 {
     this->close();
+}
+
+void MainWindow::freshLineCount()
+{
+    this->lineCount = this->ui->textEdit->document()->blockCount();
+
+    char s[8];
+
+    sprintf(s,"%d",lineCount);
+
+    QString lineC = s;
+
+    this->ui->LineCountLabel->setText("总行数："+lineC);
 }

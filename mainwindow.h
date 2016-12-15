@@ -37,6 +37,9 @@ private slots:
     void on_actionCut_triggered();
     void on_actionCopy_triggered();
     void on_actionExit_triggered();
+public slots:
+    void freshLineCount();
+
 };
 
 #endif // MAINWINDOW_H
