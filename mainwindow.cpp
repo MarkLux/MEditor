@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "finddialog.h"
 #include <QString>
 #include <QFile>
 #include <QTextStream>
@@ -19,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent) :
     lineCount = 0;
     //连接文本编辑器的变化状态信号和更新行数的槽函数
     connect(ui->textEdit,SIGNAL(textChanged()),this,SLOT(freshLineCount()));
+    //实例化一个查找对话框对象
+    findDialog = new FindDialog();
+    //连接文本查找对话框的查找信号和查找文本的槽
+    connect(this->findDialog,SIGNAL(findSignal()),this,SLOT(findInText()));
 }
 
 MainWindow::~MainWindow()
@@ -222,4 +227,20 @@ void MainWindow::freshLineCount()
     QString lineC = s;
 
     this->ui->LineCountLabel->setText("总行数："+lineC);
+}
+
+void MainWindow::on_actionFind_triggered()
+{
+    this->findDialog->show();
+    //不能访问findDialog的私有属性
+}
+
+void MainWindow::findInText()
+{
+    QString pattern = this->findDialog->pattern;
+
+    if(!this->ui->textEdit->find(pattern))
+        this->findDialog->setNotFoundLabel();
+    else
+        this->activateWindow();//激活文本编辑窗口并显示光标
 }

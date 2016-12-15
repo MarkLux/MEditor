@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <finddialog.h>
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ private:
     bool shouldSave();//检测是否需要保存
     int lineCount;
     bool isUntitled;//是否是未保存的文件
+    FindDialog * findDialog;
 
 private slots:
     void on_actionNew_triggered();
@@ -37,8 +39,11 @@ private slots:
     void on_actionCut_triggered();
     void on_actionCopy_triggered();
     void on_actionExit_triggered();
+    void on_actionFind_triggered();
+
 public slots:
     void freshLineCount();
+    void findInText();
 
 };
 
