@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QCloseEvent>
+#include <QTextCursor>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     findDialog = new FindDialog();
     //连接文本查找对话框的查找信号和查找文本的槽
     connect(this->findDialog,SIGNAL(findSignal()),this,SLOT(findInText()));
+    //连接文本替换的信号和替换文本的槽
+    connect(this->findDialog,SIGNAL(replaceSignal()),this,SLOT(replaceCursorText()));
 }
 
 MainWindow::~MainWindow()
@@ -206,7 +209,10 @@ bool MainWindow::shouldSave()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(shouldSave())
+    {
+        this->findDialog->close();
         event->accept();
+    }
     else
         event->ignore();
 }
@@ -243,4 +249,16 @@ void MainWindow::findInText()
         this->findDialog->setNotFoundLabel();
     else
         this->activateWindow();//激活文本编辑窗口并显示光标
+}
+
+void MainWindow::replaceCursorText()
+{
+    //先激活窗口
+    this->activateWindow();
+    //获取要替换成的字符串
+    QString afterStr = this->findDialog->afterString;
+    //获取光标选中的区域并且删除它，然后重新插入就可以了
+    QTextCursor tc = this->ui->textEdit->textCursor();
+    tc.removeSelectedText();
+    tc.insertText(afterStr);
 }

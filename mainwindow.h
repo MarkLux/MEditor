@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <finddialog.h>
+#include <replacedialog.h>
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,7 @@ private:
     int lineCount;
     bool isUntitled;//是否是未保存的文件
     FindDialog * findDialog;
+    ReplaceDialog * replaceDialog;
 
 private slots:
     void on_actionNew_triggered();
@@ -44,6 +46,7 @@ private slots:
 public slots:
     void freshLineCount();
     void findInText();
+    void replaceCursorText();
 
 };
 
